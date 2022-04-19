@@ -1,19 +1,19 @@
-//variables
+//Variables
 const container = document.getElementById("items");
 let productsInfo = [];
 
-//lire les données de l'API
+//Read Data API
 const fetchProducts = async () => {
   await fetch("http://localhost:3000/api/products")
     .then((res) => res.json())
     .then((data) => (productsInfo = data));
 };
 
-//----Structurer la DOM----
+//Structure du DOM
 const addProducts = async () => {
   await fetchProducts();
   productsInfo.forEach((product) => {
-    //---balise a---
+    //balise a
     const newCard = document.createElement("a");
     newCard.setAttribute("href", "./product.html?id=" + product._id);
 

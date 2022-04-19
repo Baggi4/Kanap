@@ -96,9 +96,9 @@ const getSelectedValue = () => {
 // Confirmer l'ajout du produit au panier //
 const toConfirm = () => {
   if (
-    // OK=>page cart voir le panier //
+    // Confirmation ajout article //
     confirm(
-      "La commande a bien été ajouter au panier!"
+      "Votre article a bien été ajouter au panier!"
     )
   ) {
     document.location.href = "cart.html";

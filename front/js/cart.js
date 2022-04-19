@@ -35,7 +35,7 @@ const addToCart = async () => {
 //afficher les produits stocké dans localStorage
 const articleInCart = async () => {
   await addToCart();
-  //structurer la DOM
+  //structure du DOM
   myCart.forEach((element) => {
     //balise article
     const article = document.createElement("article");
@@ -116,46 +116,46 @@ const articleInCart = async () => {
   });
 };
 
-//caché le formulaire si le panier est vide
+//Hide Form if Shop cart is empty
 const cartIsEmpty = () => {
   if (!myCart) {
-    //si le localstorage(produits) n'existe pas
+    //si le localStorage(produits) n'existe pas
     forum.style.visibility = "hidden";
   } else if (myCart.length == 0) {
-    //si le localStorage est vide
+    //si le localStorage is empty
     forum.style.visibility = "hidden";
   } else forum.style.visibility = "visible";
 };
 cartIsEmpty();
 
-//fonction de Suppression du produit du panier
+//function de supp du produit dans le panier
 const deleteFunction = async () => {
   const btnDelete = document.querySelectorAll(".deleteItem");
   for (let i = 0; i < btnDelete.length; i++) {
     let remove = btnDelete[i];
     remove.addEventListener("click", () => {
-      myCart.splice(i, 1); //suprimer le produits du tableau localStorage
-      articles[i].remove(); //supprimer l'article du DOM
-      localStorage.setItem("produits", JSON.stringify(myCart)); //mise a jour du localeStorage
-      location.reload(); //recharger la page pour mettre a jour nos totals
+      myCart.splice(i, 1); //supp le produits du tableau localStorage
+      articles[i].remove(); //supp l'article du DOM
+      localStorage.setItem("produits", JSON.stringify(myCart)); //MAJ du localStorage
+      location.reload(); //rechargement de la page pour mettre à jour le Panier
     });
   }
 };
 
-//modification du quantité
+//Modification de la quantité
 const quantityModify = async () => {
   const inputQuantity = document.getElementsByClassName("itemQuantity");
   for (let i = 0; i < inputQuantity.length; i++) {
     let modify = inputQuantity[i];
-    //ecouer evenement change (quantité)
     modify.addEventListener("change", (e) => {
       myCart[i].quantity = e.target.value; //mise a jour de la valeur de quantité en localStorage
+      //suppression de produit si la valeur de la quantité est mise à 0
       if (myCart[i].quantity <= 0) {
-        //suppression de produit si la valeur de la quantité est mise à 0
+        
         myCart.splice(i, 1);
         articles[i].remove();
         localStorage.setItem("produits", JSON.stringify(myCart));
-        location.reload(); //recharger la page pour mettre a jour nos totals
+        location.reload(); //reload la page pour mettre a jour le total
       }
       localStorage.setItem("produits", JSON.stringify(myCart));
       location.reload();
