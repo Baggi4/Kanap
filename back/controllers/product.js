@@ -33,19 +33,6 @@ exports.getOneProduct = (req, res, next) => {
   )
 };
 
-/**
- *
- * Expects request to contain:
- * contact: {
- *   firstName: string,
- *   lastName: string,
- *   address: string,
- *   city: string,
- *   email: string
- * }
- * products: [string] <-- array of product _id
- *
- */
 exports.orderProducts = (req, res, next) => {
   if (!req.body.contact ||
       !req.body.contact.firstName ||
@@ -59,24 +46,22 @@ exports.orderProducts = (req, res, next) => {
   let queries = [];
   for (let productId of req.body.products) {
     const queryPromise = new Promise((resolve, reject) => {
-      Product.findById(productId).then(
-        (product) => {
+      Product.findById(productId).then((product) => {
           if (!product) {
-            reject('Product not found: ' + productId);
+            reject('Product not found:' + productId);
           }
           product.imageUrl = req.protocol + '://' + req.get('host') + '/images/' + product.imageUrl;
           resolve(product);
         }
-      ).catch(
-        () => {
+      )
+      .catch(() => {
           reject('Database error!');
         }
       )
     });
     queries.push(queryPromise);
   }
-  Promise.all(queries).then(
-    (products) => {
+  Promise.all(queries).then((products) => {
       const orderId = uuid();
       return res.status(201).json({
         contact: req.body.contact,
@@ -84,7 +69,8 @@ exports.orderProducts = (req, res, next) => {
         orderId: orderId
       })
     }
-  ).catch(
+  )
+  .catch(
     (error) => {
       return res.status(500).json(new Error(error));
     }
