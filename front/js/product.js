@@ -2,7 +2,7 @@
 /*Modifier l'url de l'API*/
 const param = new URLSearchParams(document.location.search);
 let id = param.get("id");
-console.log(id);
+// console.log(id);
 /*Appeler l'API*/
 const fetchProduct = async () => {
   let fetchDataProduct = await fetch(
@@ -12,7 +12,7 @@ const fetchProduct = async () => {
   return productData;
 };
 fetchProduct();
-console.log(fetchProduct());
+// console.log(fetchProduct());
 /*Insérer l'API*/
 const itemsKanap = async () => {
   let canapeProductView = await fetchProduct();
@@ -42,8 +42,7 @@ btn.addEventListener("click", () => {
   let quantity = Number(document.getElementById("quantity").value);
   let itemImg = document.querySelector(".item__img img").src;
   let title = document.getElementById("title").innerText;
-  let price = Number(document.getElementById("price").innerText);
-  let description = document.getElementById("description").innerText;
+
   /*L'alerter en cas d'erreur de saisie*/
   if (!color) {
     alert("Choisissez une couleur !");
@@ -60,7 +59,6 @@ btn.addEventListener("click", () => {
     quantity,
     itemImg,
     title,
-    price,
   };
   console.log(informations);
   /*Convert Json <=> JS */
