@@ -1,8 +1,6 @@
-/*localhost:3000/api/products/*/
 /*Modifier l'url de l'API*/
 const param = new URLSearchParams(document.location.search);
 let id = param.get("id");
-// console.log(id);
 /*Appeler l'API*/
 const fetchProduct = async () => {
   let fetchDataProduct = await fetch(
@@ -16,7 +14,6 @@ fetchProduct();
 /*Insérer l'API*/
 const itemsKanap = async () => {
   let canapeProductView = await fetchProduct();
-  console.log(canapeProductView);
   let itemImg = document.querySelector(".item__img");
   let title = document.getElementById("title");
   let price = document.getElementById("price");
@@ -35,46 +32,61 @@ const color = (colors) => {
     option.innerHTML += `<option value="${color}">${color}</option>`;
   }
 };
+
+
+//-------------------Initialisation Class Produit-------------------//
+//---------------------------------------------------------------------//
+class ProductClass {
+  constructor(id, name, color, qty) {
+    this.id = id;
+    this.name = name;
+    this.color = color;
+    this.qty = qty;
+  }
+}
+
 /*Enregistrer le/les choix de l'utilisateur*/
 let btn = document.getElementById("addToCart");
 btn.addEventListener("click", () => {
+  console.log("test")
   let color = document.getElementById("colors").value;
   let quantity = Number(document.getElementById("quantity").value);
-  let itemImg = document.querySelector(".item__img img").src;
   let title = document.getElementById("title").innerText;
+  let qtyChoosen = "";
 
-  /*L'alerter en cas d'erreur de saisie*/
-  if (!color) {
-    alert("Choisissez une couleur !");
-    return;
-  }
-  if (!(quantity > 0 && quantity < 101)) {
-    alert("Choisissez une quantité !");
-    return;
-  }
-  /*Sauvegarder dans le local storage*/
-  let informations = {
-    id,
-    color,
-    quantity,
-    itemImg,
-    title,
-  };
-  console.log(informations);
-  /*Convert Json <=> JS */
-  let saveProduct = JSON.parse(localStorage.getItem("product"));
-  if (!saveProduct) {
-    saveProduct = [];
-    saveProduct.push(informations);
-  } else {
-    for (let h = 0; h < saveProduct.length; h++) {
-      if (saveProduct[h].id == id && saveProduct[h].color == color) {
-        saveProduct[h].quantity += quantity;
-        localStorage.setItem("product", JSON.stringify(saveProduct));
-        return;
-      }
+  // Initialisation variable
+  let ProductLocalStorage = [];
+  let oldQty = 0;
+
+  // Boucle for à la longueur du localStorage avec récuperation des informations du localstorage.
+  for (let i = 0; i < localStorage.length; i++) {
+    ProductLocalStorage[i] = JSON.parse(localStorage.getItem(localStorage.key(i)));
+    // Conditionnel si Id est la même dans localstorage et dans notre Newproduct,
+    // && que si la Color de notre Newproduct est strictement = à celle qui est dans le localstorage. 
+    if (id === ProductLocalStorage[i].id && ProductLocalStorage[i].color === color) {
+      oldQty = ProductLocalStorage[i].qty;
     }
-    saveProduct.push(informations);
   }
-  localStorage.setItem("product", JSON.stringify(saveProduct));
+
+  // On Calcul notre nouvel quantité en prenant en compte l'ancienne valeur.
+  qtyChoosen = parseInt(oldQty) + parseInt(quantity);
+  // On définit le produit choisis en créant une nouvelle instance de ProductClass,
+  // on inject les nouvelles valeurs dans notre Class.
+  let informations = new ProductClass(
+    id,
+    title,
+    color,
+    qtyChoosen,
+  );
+
+  if (color != "" && quantity >= 1 && quantity <= 100) {
+
+    localStorage.setItem(
+      title + " " + color,
+      JSON.stringify(informations)
+    );
+
+  } else {
+    alert("Veuillez renseigner une couleur et une quantité entre 1 et 100.");
+  }
 });
